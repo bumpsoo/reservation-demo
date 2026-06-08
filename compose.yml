@@ -1,0 +1,29 @@
+name: reservation-demo
+
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: reservation-demo-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: reservation_demo
+      MYSQL_USER: demo
+      MYSQL_PASSWORD: demo
+    volumes:
+      - reservation-demo-mysql-data:/var/lib/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reservation-demo-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+
+volumes:
+  reservation-demo-mysql-data:
