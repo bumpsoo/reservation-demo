@@ -84,4 +84,14 @@ erDiagram
 |------|------|------|
 | 비관적 락 (현재) | 구현 단순, 정합성 강함 | 동시성 높을 때 DB 부하 (row 경합) |
 | 낙관적 락 | 읽기 성능 좋음 | 충돌 시 재시도 로직 필요 |
-| Redis 선점 | DB 부하 분산 | 인프라 복잡도 증가, Mysql과 Redis 트랜잭션 처리 불가|
+| Redis 선점 | DB 부하 분산 | 인프라 복잡도 증가, MySQL과 Redis 간 단일 트랜잭션 불가 |
+
+### FOR UPDATE SKIP LOCKED (미적용)
+
+잠긴 row는 대기하지 않고 skip한다.
+
+지정 좌석 ID(`seatInventoryIds`) 예약에도 쓸 수는 있지만, lock 못 잡은 seat은 결과에서 빠지므로 `inventories.size() == 요청 seat 수` 검증 처리 필요.
+
+빈 좌석 아무거나와 같은 선착순 패턴과 더 잘 맞아 보인다.
+
+긱뉴스에 올라온 [shopify 글](https://shopify.engineering/scaling-inventory-reservations) 보고 적용 가능한지 검토해보았는데, 애매해보임.
